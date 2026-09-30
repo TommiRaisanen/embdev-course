@@ -4,13 +4,13 @@
 #include <zephyr/drivers/gpio.h>
 #include <zephyr/drivers/uart.h>
 #include <zephyr/timing/timing.h>
+#include <stdlib.h>
 
-
-/* Sulariohjelmoinnin koodaustehtävät nro. 5 / Tommi Räisänen TVT24SPL
+/* Sulariohjelmoinnin koodaustehtävät nro. 5 /  TVT24SPL
 * Yksikkötestaus
 * Tähtään täysiin pisteisiin mutta katsotaan mihin päästään
 * Lisään alle '*' merkin sitä mukaan kun saan tehtäviä omasta mielestä tehtävänannon mukaisesti valmiiksi :-)
-*  1p suoritus: Yksinkertaiset testit ja parseri sulautetussa ohjelmassa             []
+*  1p suoritus: Yksinkertaiset testit ja parseri sulautetussa ohjelmassa             [*]
 * +1p suoritus: Lisätään testikeissejä								                 []
 * +1p suoritus: Lisää testausta liikennevaloihin                 					 []
 * +1p suoritus: Oma lisäominaisuus    							                     []
@@ -26,9 +26,64 @@
 // Thread initializations
 #define STACKSIZE 1024
 #define PRIORITY 5
+#define TIME_LEN_ERROR      -1
+#define TIME_ARRAY_ERROR    -2
+#define TIME_VALUE_ERROR    -3
+#define TIME_NULL_ERROR     -4
+#define TIME_BOUNDARY_ERROR -5
 // Led pin configurations
 static const struct gpio_dt_spec red = GPIO_DT_SPEC_GET(DT_ALIAS(led0), gpios);
 static const struct gpio_dt_spec green = GPIO_DT_SPEC_GET(DT_ALIAS(led1), gpios);
+
+
+
+int time_parse(char *time) {
+
+	// how many seconds, default returns error
+	int seconds = TIME_LEN_ERROR;
+	int hours = TIME_LEN_ERROR;
+	int minutes = TIME_LEN_ERROR;
+	// TODO: Check that string is not null
+	if(time == NULL) {
+		return TIME_NULL_ERROR;
+	}
+
+	if (strlen(time) != 6) {
+    	return TIME_LEN_ERROR;
+	}
+	for (int i = 0; i < 6; i++) {
+    	if (time[i] < '0' || time[i] > '9') {
+        	return TIME_VALUE_ERROR;
+    	}
+	}
+	// Parse values from time string
+	// For example: 124033 -> 12hour 40min 33sec
+    int values[3];
+	values[2] = atoi(time+4); // seconds
+	time[4] = 0;
+	values[1] = atoi(time+2); // minutes
+	time[2] = 0;
+	values[0] = atoi(time); // hours
+	// Now you have:
+	// values[0] hour
+	// values[1] minute
+	// values[2] second
+	hours = values[0];
+	minutes = values[1];
+	seconds = values[2];
+	// TODO: Add boundary check time values: below zero or above limit not allowed
+	// limits are 59 for minutes, 23 for hours, etc
+	if(hours < 0 || hours > 23) return TIME_VALUE_ERROR;
+	if(minutes < 0 || minutes > 59) return TIME_VALUE_ERROR;
+	if(seconds < 0 || seconds > 59) return TIME_VALUE_ERROR;
+	// TODO: Calculate return value from the parsed minutes and seconds
+	// Otherwise error will be returned!
+	// seconds = ...
+	seconds = seconds + (minutes * 60);
+
+	return seconds;
+}
+
 
 
 // UART initialization
@@ -42,11 +97,13 @@ K_FIFO_DEFINE(dispatcher_fifo);
 K_FIFO_DEFINE(data_fifo);
 
 
+
 void red_led_task(void *, void *, void*);
 void green_led_task(void *, void *, void*);
 void yellow_led_task(void *, void *, void*);
 void debug_task(void *, void *, void*);
-
+void timer_handler(struct k_timer *t);
+void led_work_handler(struct k_work *work);
 // Condition Variables
 K_MUTEX_DEFINE(red_mutex);
 K_CONDVAR_DEFINE(red_signal);
@@ -65,7 +122,8 @@ K_THREAD_STACK_DEFINE(green_stack_area, STACKSIZE);
 struct k_thread red_thread_data; 
 struct k_thread yellow_thread_data; 
 struct k_thread green_thread_data; 
-
+K_TIMER_DEFINE(led_timer, timer_handler, NULL);
+K_WORK_DEFINE(led_work, led_work_handler);
 // FIFO dispatcher data type
 struct data_t {
 	/*************************
@@ -215,9 +273,17 @@ static void dispatcher_task(void *unused1, void *unused2, void *unused3)
 	while (true) {
 		// Receive dispatcher data from uart_task fifo
 		struct data_t *rec_item = k_fifo_get(&dispatcher_fifo, K_FOREVER);
+
 		char sequence[20];
 		memcpy(sequence,rec_item->msg,20);
 		k_free(rec_item);
+		
+		int secs = time_parse(sequence);
+		if (secs >= 0) {
+		printk("Valid time string, starting timer for %d seconds\n", secs);
+	    k_timer_start(&led_timer, K_SECONDS(secs), K_NO_WAIT);
+    	continue;   
+		}
 
                 __ASSERT(strlen(sequence) > 0, "Empty sequence received from FIFO");
                 __ASSERT(strlen(sequence) < 20, "Sequence too long, buffer overflow risk");
@@ -421,6 +487,18 @@ void debug_task(void *, void *, void*) {
 
 		k_yield();
 	}
+}
+
+void timer_handler(struct k_timer *t) {
+	k_work_submit(&led_work);
+}
+
+void led_work_handler(struct k_work *work) {
+    printk(" red led on\n");
+    gpio_pin_set_dt(&red, 1);
+    k_msleep(1000);
+    gpio_pin_set_dt(&red, 0);
+    printk("Red led off\n");
 }
 
 K_THREAD_DEFINE(dis_thread,STACKSIZE,dispatcher_task,NULL,NULL,NULL,PRIORITY,0,0);
