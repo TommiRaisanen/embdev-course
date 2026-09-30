@@ -11,7 +11,7 @@
 * Tähtään täysiin pisteisiin mutta katsotaan mihin päästään
 * Lisään alle '*' merkin sitä mukaan kun saan tehtäviä omasta mielestä tehtävänannon mukaisesti valmiiksi :-)
 *  1p suoritus: Yksinkertaiset testit ja parseri sulautetussa ohjelmassa             [*]
-* +1p suoritus: Lisätään testikeissejä								                 []
+* +1p suoritus: Lisätään testikeissejä								                 [*] kts. googletest_2/test_cases/TestSuite.cpp
 * +1p suoritus: Lisää testausta liikennevaloihin                 					 []
 * +1p suoritus: Oma lisäominaisuus    							                     []
 *
@@ -31,6 +31,8 @@
 #define TIME_VALUE_ERROR    -3
 #define TIME_NULL_ERROR     -4
 #define TIME_BOUNDARY_ERROR -5
+#define TIME_ZERO_ERROR 	-6
+
 // Led pin configurations
 static const struct gpio_dt_spec red = GPIO_DT_SPEC_GET(DT_ALIAS(led0), gpios);
 static const struct gpio_dt_spec green = GPIO_DT_SPEC_GET(DT_ALIAS(led1), gpios);
@@ -80,7 +82,9 @@ int time_parse(char *time) {
 	// Otherwise error will be returned!
 	// seconds = ...
 	seconds = seconds + (minutes * 60);
-
+	if(seconds == 0) {
+		return TIME_ZERO_ERROR;
+	}
 	return seconds;
 }
 

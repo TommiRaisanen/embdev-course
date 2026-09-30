@@ -46,6 +46,8 @@ int time_parse(char *time) {
 	// Otherwise error will be returned!
 	// seconds = ...
 	seconds = seconds + (minutes * 60);
-
+	if(seconds == 0 ){
+		return TIME_ZERO_ERROR;
+	}
 	return seconds;
 }

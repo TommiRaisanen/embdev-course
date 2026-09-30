@@ -7,6 +7,7 @@
 #define TIME_VALUE_ERROR    -3
 #define TIME_NULL_ERROR     -4
 #define TIME_BOUNDARY_ERROR -5
+#define TIME_ZERO_ERROR     -6
 
 using namespace std;
 
