@@ -1,0 +1,319 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<robot generator="Robot 7.5 (Python 3.14.8 on win32)" generated="2026-10-06T14:13:16.117968" rpa="false" schemaversion="5">
+<suite id="s1" name="Serial Str Example" source="C:\Users\Kommi\Documents\Vuosi3\Periodi1\Sulariohjelmointi\embdev-course\VK6\serial_str_example.robot">
+<test id="s1-t1" name="Connect Serial" line="11">
+<kw name="Log To Console" owner="BuiltIn">
+<arg>Connecting to ${board}</arg>
+<doc>Logs the given message to the console.</doc>
+<status status="PASS" start="2026-10-06T14:13:16.219247" elapsed="0.000540"/>
+</kw>
+<kw name="Add Port" owner="SerialLibrary">
+<arg>${com}</arg>
+<arg>baudrate=${baud}</arg>
+<arg>encoding=ascii</arg>
+<doc>Adds new port with specified locator.</doc>
+<status status="PASS" start="2026-10-06T14:13:16.220075" elapsed="0.001921"/>
+</kw>
+<kw name="Port Should Be Open" owner="SerialLibrary">
+<arg>${com}</arg>
+<doc>Fails if specified port is closed.</doc>
+<status status="PASS" start="2026-10-06T14:13:16.222351" elapsed="0.000317"/>
+</kw>
+<kw name="Reset Input Buffer" owner="SerialLibrary">
+<doc>Clears input buffer.</doc>
+<status status="PASS" start="2026-10-06T14:13:16.222983" elapsed="0.000222"/>
+</kw>
+<kw name="Reset Output Buffer" owner="SerialLibrary">
+<doc>Clears outout buffer.</doc>
+<status status="PASS" start="2026-10-06T14:13:16.223501" elapsed="0.000210"/>
+</kw>
+<status status="PASS" start="2026-10-06T14:13:16.218204" elapsed="0.005820"/>
+</test>
+<test id="s1-t2" name="Valid Time String" line="18">
+<kw name="Set Variable" owner="BuiltIn">
+<msg time="2026-10-06T14:13:16.225844" level="INFO">${sent} = 000120X</msg>
+<var>${sent}</var>
+<arg>000120X</arg>
+<doc>Returns the given values which can then be assigned to a variable.</doc>
+<status status="PASS" start="2026-10-06T14:13:16.225425" elapsed="0.000464"/>
+</kw>
+<kw name="Set Variable" owner="BuiltIn">
+<msg time="2026-10-06T14:13:16.226507" level="INFO">${expected} = 80X</msg>
+<var>${expected}</var>
+<arg>80X</arg>
+<doc>Returns the given values which can then be assigned to a variable.</doc>
+<status status="PASS" start="2026-10-06T14:13:16.226198" elapsed="0.000346"/>
+</kw>
+<kw name="Write Data" owner="SerialLibrary">
+<arg>${sent}</arg>
+<arg>encoding=ascii</arg>
+<doc>Writes data into the port.</doc>
+<status status="PASS" start="2026-10-06T14:13:16.226928" elapsed="0.000408"/>
+</kw>
+<kw name="Log To Console" owner="BuiltIn">
+<arg>Send ${sent}</arg>
+<doc>Logs the given message to the console.</doc>
+<status status="PASS" start="2026-10-06T14:13:16.227642" elapsed="0.000557"/>
+</kw>
+<kw name="Read Until" owner="SerialLibrary">
+<msg time="2026-10-06T14:13:16.289589" level="INFO">${read} = 80X</msg>
+<var>${read}</var>
+<arg>terminator=58</arg>
+<arg>encoding=ascii</arg>
+<doc>Read until a termination sequence is found, size exceeded or timeout.</doc>
+<status status="PASS" start="2026-10-06T14:13:16.228483" elapsed="0.061208"/>
+</kw>
+<kw name="Log To Console" owner="BuiltIn">
+<arg>Received ${read}</arg>
+<doc>Logs the given message to the console.</doc>
+<status status="PASS" start="2026-10-06T14:13:16.290359" elapsed="0.000955"/>
+</kw>
+<kw name="Should Be Equal As Strings" owner="BuiltIn">
+<arg>${read}</arg>
+<arg>${expected}</arg>
+<doc>Fails if objects are unequal after converting them to strings.</doc>
+<status status="PASS" start="2026-10-06T14:13:16.291828" elapsed="0.000785"/>
+</kw>
+<kw name="Log To Console" owner="BuiltIn">
+<arg>Tested ${read} is same as ${expected}</arg>
+<doc>Logs the given message to the console.</doc>
+<status status="PASS" start="2026-10-06T14:13:16.293145" elapsed="0.000848"/>
+</kw>
+<status status="PASS" start="2026-10-06T14:13:16.224685" elapsed="0.069960"/>
+</test>
+<test id="s1-t3" name="Invalid Time String" line="32">
+<kw name="Set Variable" owner="BuiltIn">
+<msg time="2026-10-06T14:13:16.298667" level="INFO">${sent} = 001067X</msg>
+<var>${sent}</var>
+<arg>001067X</arg>
+<doc>Returns the given values which can then be assigned to a variable.</doc>
+<status status="PASS" start="2026-10-06T14:13:16.297397" elapsed="0.001392"/>
+</kw>
+<kw name="Set Variable" owner="BuiltIn">
+<msg time="2026-10-06T14:13:16.300844" level="INFO">${expected} = -3X</msg>
+<var>${expected}</var>
+<arg>-3X</arg>
+<doc>Returns the given values which can then be assigned to a variable.</doc>
+<status status="PASS" start="2026-10-06T14:13:16.299604" elapsed="0.001417"/>
+</kw>
+<kw name="Write Data" owner="SerialLibrary">
+<arg>${sent}</arg>
+<arg>encoding=ascii</arg>
+<doc>Writes data into the port.</doc>
+<status status="PASS" start="2026-10-06T14:13:16.301787" elapsed="0.001113"/>
+</kw>
+<kw name="Log To Console" owner="BuiltIn">
+<arg>Send ${sent}</arg>
+<doc>Logs the given message to the console.</doc>
+<status status="PASS" start="2026-10-06T14:13:16.303834" elapsed="0.001505"/>
+</kw>
+<kw name="Read Until" owner="SerialLibrary">
+<msg time="2026-10-06T14:13:16.370726" level="INFO">${read} = -3X</msg>
+<var>${read}</var>
+<arg>terminator=58</arg>
+<arg>encoding=ascii</arg>
+<doc>Read until a termination sequence is found, size exceeded or timeout.</doc>
+<status status="PASS" start="2026-10-06T14:13:16.306053" elapsed="0.064773"/>
+</kw>
+<kw name="Log To Console" owner="BuiltIn">
+<arg>Received ${read}</arg>
+<doc>Logs the given message to the console.</doc>
+<status status="PASS" start="2026-10-06T14:13:16.371591" elapsed="0.001046"/>
+</kw>
+<kw name="Should Be Equal As Strings" owner="BuiltIn">
+<arg>${read}</arg>
+<arg>${expected}</arg>
+<doc>Fails if objects are unequal after converting them to strings.</doc>
+<status status="PASS" start="2026-10-06T14:13:16.373382" elapsed="0.001175"/>
+</kw>
+<kw name="Log To Console" owner="BuiltIn">
+<arg>Tested ${read} is same as ${expected}</arg>
+<doc>Logs the given message to the console.</doc>
+<status status="PASS" start="2026-10-06T14:13:16.375290" elapsed="0.000950"/>
+</kw>
+<status status="PASS" start="2026-10-06T14:13:16.296041" elapsed="0.080754"/>
+</test>
+<test id="s1-t4" name="Length Check" line="45">
+<kw name="Reset Input Buffer" owner="SerialLibrary">
+<doc>Clears input buffer.</doc>
+<status status="PASS" start="2026-10-06T14:13:16.378844" elapsed="0.000463"/>
+</kw>
+<kw name="Set Variable" owner="BuiltIn">
+<msg time="2026-10-06T14:13:16.381388" level="INFO">${sent} = 0001X</msg>
+<var>${sent}</var>
+<arg>0001X</arg>
+<doc>Returns the given values which can then be assigned to a variable.</doc>
+<status status="PASS" start="2026-10-06T14:13:16.380131" elapsed="0.001392"/>
+</kw>
+<kw name="Set Variable" owner="BuiltIn">
+<msg time="2026-10-06T14:13:16.383041" level="INFO">${expected} = -1X</msg>
+<var>${expected}</var>
+<arg>-1X</arg>
+<doc>Returns the given values which can then be assigned to a variable.</doc>
+<status status="PASS" start="2026-10-06T14:13:16.382193" elapsed="0.000924"/>
+</kw>
+<kw name="Write Data" owner="SerialLibrary">
+<arg>${sent}</arg>
+<arg>encoding=ascii</arg>
+<doc>Writes data into the port.</doc>
+<status status="PASS" start="2026-10-06T14:13:16.383680" elapsed="0.001031"/>
+</kw>
+<kw name="Log To Console" owner="BuiltIn">
+<arg>Send ${sent}</arg>
+<doc>Logs the given message to the console.</doc>
+<status status="PASS" start="2026-10-06T14:13:16.385751" elapsed="0.001424"/>
+</kw>
+<kw name="Read Until" owner="SerialLibrary">
+<msg time="2026-10-06T14:13:17.414408" level="INFO">${read} = </msg>
+<var>${read}</var>
+<arg>terminator=58</arg>
+<arg>encoding=ascii</arg>
+<doc>Read until a termination sequence is found, size exceeded or timeout.</doc>
+<status status="PASS" start="2026-10-06T14:13:16.387946" elapsed="1.026525"/>
+</kw>
+<kw name="Log To Console" owner="BuiltIn">
+<arg>Received ${read}</arg>
+<doc>Logs the given message to the console.</doc>
+<status status="PASS" start="2026-10-06T14:13:17.414992" elapsed="0.000674"/>
+</kw>
+<kw name="Should Be Equal As Strings" owner="BuiltIn">
+<msg time="2026-10-06T14:13:17.416785" level="FAIL"> != -1X</msg>
+<arg>${read}</arg>
+<arg>${expected}</arg>
+<doc>Fails if objects are unequal after converting them to strings.</doc>
+<status status="FAIL" start="2026-10-06T14:13:17.416023" elapsed="0.001177"> != -1X</status>
+</kw>
+<status status="FAIL" start="2026-10-06T14:13:16.378024" elapsed="1.040024"> != -1X</status>
+</test>
+<test id="s1-t5" name="Zero Seconds Check" line="55">
+<kw name="Reset Input Buffer" owner="SerialLibrary">
+<doc>Clears input buffer.</doc>
+<status status="PASS" start="2026-10-06T14:13:17.419720" elapsed="0.000313"/>
+</kw>
+<kw name="Set Variable" owner="BuiltIn">
+<msg time="2026-10-06T14:13:17.421028" level="INFO">${sent} = 000000X</msg>
+<var>${sent}</var>
+<arg>000000X</arg>
+<doc>Returns the given values which can then be assigned to a variable.</doc>
+<status status="PASS" start="2026-10-06T14:13:17.420502" elapsed="0.000578"/>
+</kw>
+<kw name="Set Variable" owner="BuiltIn">
+<msg time="2026-10-06T14:13:17.421908" level="INFO">${expected} = -6X</msg>
+<var>${expected}</var>
+<arg>-6X</arg>
+<doc>Returns the given values which can then be assigned to a variable.</doc>
+<status status="PASS" start="2026-10-06T14:13:17.421456" elapsed="0.000500"/>
+</kw>
+<kw name="Write Data" owner="SerialLibrary">
+<arg>${sent}</arg>
+<arg>encoding=ascii</arg>
+<doc>Writes data into the port.</doc>
+<status status="PASS" start="2026-10-06T14:13:17.422304" elapsed="0.000551"/>
+</kw>
+<kw name="Log To Console" owner="BuiltIn">
+<arg>Send ${sent}</arg>
+<doc>Logs the given message to the console.</doc>
+<status status="PASS" start="2026-10-06T14:13:17.423248" elapsed="0.000591"/>
+</kw>
+<kw name="Read Until" owner="SerialLibrary">
+<msg time="2026-10-06T14:13:18.448363" level="INFO">${read} = </msg>
+<var>${read}</var>
+<arg>terminator=58</arg>
+<arg>encoding=ascii</arg>
+<doc>Read until a termination sequence is found, size exceeded or timeout.</doc>
+<status status="PASS" start="2026-10-06T14:13:17.424244" elapsed="1.024351"/>
+</kw>
+<kw name="Log To Console" owner="BuiltIn">
+<arg>Received ${read}</arg>
+<doc>Logs the given message to the console.</doc>
+<status status="PASS" start="2026-10-06T14:13:18.449779" elapsed="0.001591"/>
+</kw>
+<kw name="Should Be Equal As Strings" owner="BuiltIn">
+<msg time="2026-10-06T14:13:18.453628" level="FAIL"> != -6X</msg>
+<arg>${read}</arg>
+<arg>${expected}</arg>
+<doc>Fails if objects are unequal after converting them to strings.</doc>
+<status status="FAIL" start="2026-10-06T14:13:18.452194" elapsed="0.001784"> != -6X</status>
+</kw>
+<status status="FAIL" start="2026-10-06T14:13:17.419119" elapsed="1.035818"> != -6X</status>
+</test>
+<test id="s1-t6" name="Digit Check" line="65">
+<kw name="Reset Input Buffer" owner="SerialLibrary">
+<doc>Clears input buffer.</doc>
+<status status="PASS" start="2026-10-06T14:13:18.459578" elapsed="0.000583"/>
+</kw>
+<kw name="Set Variable" owner="BuiltIn">
+<msg time="2026-10-06T14:13:18.464627" level="INFO">${sent} = 00A120X</msg>
+<var>${sent}</var>
+<arg>00A120X</arg>
+<doc>Returns the given values which can then be assigned to a variable.</doc>
+<status status="PASS" start="2026-10-06T14:13:18.461209" elapsed="0.003563"/>
+</kw>
+<kw name="Set Variable" owner="BuiltIn">
+<msg time="2026-10-06T14:13:18.467513" level="INFO">${expected} = -3X</msg>
+<var>${expected}</var>
+<arg>-3X</arg>
+<doc>Returns the given values which can then be assigned to a variable.</doc>
+<status status="PASS" start="2026-10-06T14:13:18.465962" elapsed="0.001680"/>
+</kw>
+<kw name="Write Data" owner="SerialLibrary">
+<arg>${sent}</arg>
+<arg>encoding=ascii</arg>
+<doc>Writes data into the port.</doc>
+<status status="PASS" start="2026-10-06T14:13:18.468846" elapsed="0.001418"/>
+</kw>
+<kw name="Log To Console" owner="BuiltIn">
+<arg>Send ${sent}</arg>
+<doc>Logs the given message to the console.</doc>
+<status status="PASS" start="2026-10-06T14:13:18.471269" elapsed="0.001553"/>
+</kw>
+<kw name="Read Until" owner="SerialLibrary">
+<msg time="2026-10-06T14:13:19.499929" level="INFO">${read} = </msg>
+<var>${read}</var>
+<arg>terminator=58</arg>
+<arg>encoding=ascii</arg>
+<doc>Read until a termination sequence is found, size exceeded or timeout.</doc>
+<status status="PASS" start="2026-10-06T14:13:18.473649" elapsed="1.026390"/>
+</kw>
+<kw name="Log To Console" owner="BuiltIn">
+<arg>Received ${read}</arg>
+<doc>Logs the given message to the console.</doc>
+<status status="PASS" start="2026-10-06T14:13:19.500761" elapsed="0.000971"/>
+</kw>
+<kw name="Should Be Equal As Strings" owner="BuiltIn">
+<msg time="2026-10-06T14:13:19.503149" level="FAIL"> != -3X</msg>
+<arg>${read}</arg>
+<arg>${expected}</arg>
+<doc>Fails if objects are unequal after converting them to strings.</doc>
+<status status="FAIL" start="2026-10-06T14:13:19.502333" elapsed="0.000981"> != -3X</status>
+</kw>
+<status status="FAIL" start="2026-10-06T14:13:18.457183" elapsed="1.046683"> != -3X</status>
+</test>
+<test id="s1-t7" name="Disconnect Serial" line="75">
+<kw name="Log To Console" owner="BuiltIn">
+<arg>Disconnecting ${board}</arg>
+<doc>Logs the given message to the console.</doc>
+<status status="PASS" start="2026-10-06T14:13:19.505759" elapsed="0.000899"/>
+</kw>
+<kw name="Delete Port" owner="SerialLibrary" type="TEARDOWN">
+<arg>${com}</arg>
+<doc>Deletes specified port.</doc>
+<status status="PASS" start="2026-10-06T14:13:19.507553" elapsed="0.003562"/>
+</kw>
+<status status="PASS" start="2026-10-06T14:13:19.504909" elapsed="0.006692"/>
+</test>
+<status status="FAIL" start="2026-10-06T14:13:16.120311" elapsed="3.393447"/>
+</suite>
+<statistics>
+<total>
+<stat pass="4" fail="3" skip="0">All Tests</stat>
+</total>
+<tag>
+</tag>
+<suite>
+<stat name="Serial Str Example" id="s1" pass="4" fail="3" skip="0">Serial Str Example</stat>
+</suite>
+</statistics>
+<errors>
+</errors>
+</robot>
